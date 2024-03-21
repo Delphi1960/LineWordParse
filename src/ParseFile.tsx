@@ -10,9 +10,8 @@ import {
 
 import RNFS from 'react-native-fs';
 import {WordListType} from './data.type';
-import {WordsList} from './data/nouns_ru';
-// import {WordsListАrray} from './data/words';
-import {WordsSetArray} from './data/wordsSet';
+import {WordSetArray1} from './data/nouns_ru8';
+import {WordSetArray2} from './data/ushakov';
 
 function setUniqueWords(arrayWords: WordListType[]): WordListType[] {
   //  Получить только уникальные слова и отсортировать их по алфавиту
@@ -56,22 +55,20 @@ const Item = ({title, hint}: ItemProps) => (
   </View>
 );
 export default function ParsFile() {
-  const [state, setstate] = useState<WordListType[]>([]);
+  const [state] = useState<WordListType[]>([]);
 
   const handlePress = () => {
     let start = Date.now();
-    // console.log(`Было ${WordsListАrray.length} слов`);
-    // console.log(`Было ${WordsList.length} слов`);
-    console.log(`New ${WordsSetArray.length} слов`);
-    // console.log(`Old ${WordsList.length} слов`);
+    console.log(`nouns_ru8 ${WordSetArray1.length} слов`);
+    console.log(`ushakov ${WordSetArray2.length} слов`);
 
     // объединить два массива
-    // const combinedArray: WordListType[] = [...WordsListАrray, ...WordsList];
+    const combinedArray: WordListType[] = [...WordSetArray1, ...WordSetArray2];
     // setstate(combinedArray);
-    // console.log(`Слил два массива ${combinedArray.length} слов`);
+    console.log(`Слил два массива ${combinedArray.length} слов`);
 
     //  Получить только уникальные слова
-    // const cleanedWords = setUniqueWords(WordsSetArray);
+    const cleanedWords = setUniqueWords(combinedArray);
 
     //Удалить элементы у которых word заканчивается на "ЫЙ" ВОЙ ИТЬСЯ ИТЬ ЁНОК
     // АТЬ, ЯТЬ, ИТЬ, ЕТЬ, ТИ, ТЬСЯ, УТЬ, ЕЧЬ
@@ -79,11 +76,11 @@ export default function ParsFile() {
     //   item => !item.word.endsWith('АТЬ'),
     // );
 
-    const endingsRegex = /(АТЬ|ЯТЬ|ИТЬ|ЕТЬ|ЁНОК|ТИ|ОЙ|ТЬСЯ|УТЬ|ЕЧЬ)$/;
+    // const endingsRegex = /(АТЬ|ЯТЬ|ИТЬ|ЕТЬ|ЁНОК|ТИ|ОЙ|ТЬСЯ|УТЬ|ЕЧЬ)$/;
 
-    const cleanedWords = WordsSetArray.filter(
-      item => !endingsRegex.test(item.word),
-    );
+    // const cleanedWords = WordsSetArray.filter(
+    //   item => !endingsRegex.test(item.word),
+    // );
 
     // const cleanedWords5 = cleanedWords.filter(
     //   item => !item.word.startsWith('-'),
@@ -102,10 +99,15 @@ export default function ParsFile() {
     // }));
 
     // console.log(RNFS.DocumentDirectoryPath);
-    console.log(`Стало ${cleanedWords.length} слов`);
+    // console.log(`Стало ${cleanedWords.length} слов`);
 
     // saveFile()
+    // saveFile(cleanedWords);
+    // const wordListArray: WordListType[] = convertToWordListTypeArray(jsonData);
+
+    console.log(combinedArray.length);
     saveFile(cleanedWords);
+    console.log(cleanedWords.length);
 
     console.log(`Время :${(Date.now() - start) / 1000} sec`);
   };
@@ -117,7 +119,9 @@ export default function ParsFile() {
 
       <FlatList
         data={state}
-        renderItem={({item}) => <Item title={item.word} hint={item.hint} />}
+        renderItem={({item}) => (
+          <Item title={item.word} hint={item.definition} />
+        )}
         keyExtractor={item => item.word}
       />
     </View>
